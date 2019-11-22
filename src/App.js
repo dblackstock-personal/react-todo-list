@@ -1,26 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import ToDoItem from './components/ToDoItem.js';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+
+  state = {
+    items: []
+  }
+
+  recordItem = (event) => {
+    this.setState({
+      potentialItem: event.target.value
+    })
+  }
+
+  storeItem = () => {
+    this.setState({
+      items: [...this.state.items, this.state.potentialItem]
+    })
+    this.state.potentialItem = '';
+  }
+
+  deleteItem = (event) => {
+    let indexToDelete = this.state.items.indexOf(event.target.textContent);
+    let newArray = this.state.items;
+    newArray.splice(indexToDelete,1);
+    this.setState({
+      items: newArray
+    })
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <div className="input">
+          <input value={this.state.potentialItem} type="text" onChange={this.recordItem}></input>
+          <button onClick={this.storeItem}>Add</button>
+        </div>
+        <div className="record">
+          <div className="record_title">My To-Do Items</div>
+          {/* this loop outputs all the items */}
+          {
+            this.state.items.map(
+              (item) => {
+                return <ToDoItem text={item} deleteItem={this.deleteItem} />
+              }
+            )
+          }
+        </div>
+
+      </div>
+    );
+  }
 }
 
 export default App;
